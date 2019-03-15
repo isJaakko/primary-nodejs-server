@@ -4,7 +4,8 @@ const path = require('path');
 const {
   setResponse,
   staticSource,
-  receiveFile,
+  receiveFile_buffer,
+  receiveFile_stream,
 } = require('./handlers');
 const config = require('../config');
 
@@ -15,11 +16,10 @@ const server = http.createServer((req, res) => {
   if (req.method.toLocaleLowerCase() === 'get') {
     switch (req.url) {
       case '/':
-        setResponse(req, res, {
+        staticSource(res, path.join(__dirname, '../index.html'), {
           header: {
             'Content-Type': 'text/html'
-          },
-          data: fs.readFileSync("./index.html")
+          }
         });
         break;
       case '/data':
@@ -30,7 +30,7 @@ const server = http.createServer((req, res) => {
         break;
     }
   } else if (req.method.toLocaleLowerCase() === 'post') {
-    receiveFile(req, res);
+    receiveFile_buffer(req, res);
   }
 
 })
